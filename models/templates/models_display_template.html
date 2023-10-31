@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 50%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+{% for model_result in model_results %}
+    <h1>{{ model_result.model_name }}</h1>
+    <h2>Model performance for Training set</h2>
+    <ul>
+        <li>RMSE: {{ model_result.train_performance.rmse }}</li>
+        <li>MSE: {{ model_result.train_performance.mse }}</li>
+        <li>MAE: {{ model_result.train_performance.mae }}</li>
+        <li>R2 Score: {{ model_result.train_performance.r2 }}</li>
+    </ul>
+    <h2>Model performance for Test set</h2>
+    <ul>
+        <li>RMSE: {{ model_result.test_performance.rmse }}</li>
+        <li>MSE: {{ model_result.test_performance.mse }}</li>
+        <li>MAE: {{ model_result.test_performance.mae }}</li>
+        <li>R2 Score: {{ model_result.test_performance.r2 }}</li>
+    </ul>
+{% endfor %}
+<h1>R2 Scores for All Models</h1>
+<table border="1">
+    <tr>
+        <th>Model Name</th>
+        <th>R2 Score</th>
+    </tr>
+    {% for r2_score in r2_scores.values %}
+    <tr>
+        <td>{{ r2_score.0 }}</td>
+        <td>{{ r2_score.1 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<h3> Prediction of maths scores on the basis of trained Linear Regression model</h3>
+<h2></h2>
+<!-- models_display_template.html -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Predict Math Score</button>
+</form>
+
+{% if predictions %}
+    <h2>Predicted Math Score:</h2>
+    <p>{{ predictions }}</p>
+{% endif %}
+
+</body>
+</html>
